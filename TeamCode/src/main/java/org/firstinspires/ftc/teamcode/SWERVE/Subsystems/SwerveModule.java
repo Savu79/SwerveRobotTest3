@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.SWERVE.Subsystems;
 
+import static org.firstinspires.ftc.robotcore.external.navigation.AngleUnit.normalizeRadians;
+
 import com.acmerobotics.dashboard.config.Config;
 import com.arcrobotics.ftclib.controller.PIDFController;
 import com.qualcomm.robotcore.hardware.AnalogInput;
@@ -21,7 +23,7 @@ import java.util.Locale;
 @Config
 public class SwerveModule {
     public static double Ps = 0, Is = 0, Ds = 0; //CONTROL PID PT SERVO
-    //public static double Pm = 0, Im = 0, Dm = 0;
+    public static double P = 0, I = 0, D = 0;
     public static double K_STATIC = 0; //
     public static double MAX_SERVO = 1, MAX_MOTOR = 1;  // PUTERE MAXIMA ADMISA PT SERVO SI MOTOR
 
@@ -41,8 +43,10 @@ public class SwerveModule {
     public boolean wheelFlipped = false;
     private double targetS = 0.0;
     //private double targetM = 0.0;
+    private double target=0.0;
     private double positionS = 0.0;
     //private double positionM = 0.0;
+    private double position=0.0;
     private double lastVoltage;
     private double voltage;
     boolean creste=true;
@@ -72,61 +76,36 @@ public class SwerveModule {
     }
 
     public void read() {
-        voltage = encoder.getVoltage();
+        //position = encoder.getCurrentPosition();
+        //TODO:vazut cum trebbuie schimbat getCurrentPozition
     }
 
 
     public void update() {
+        rotationController.setPIDF(P, I, D, 0);
+        double target = getTargetRotation(), current = getModuleRotation();
 
-        rotationController.setPIDF(Ps, Is, Ds, 0);
-        double targetS = getTargetRotation(), currentS = getModuleRotation(voltage);
-        double error = targetS - currentS;
-        if (MOTOR_FLIPPING && error > 90) {
-            targetS = targetS - 180;
-            creste=false;
+        double error = normalizeRadians(target - current);
+        if (MOTOR_FLIPPING && Math.abs(error) > Math.PI / 2) {
+            target = normalizeRadians(target - Math.PI);
             wheelFlipped = true;
-
-        } else if(MOTOR_FLIPPING && error<90 && error>0) {
-            creste=true;
+        } else {
             wheelFlipped = false;
-
-        } else if(MOTOR_FLIPPING && error <-90) {
-            targetS=targetS+180;
-            creste=true;
-            wheelFlipped=true;
-
-        } else if(MOTOR_FLIPPING && error>-90 && error<0) {
-            creste=false;
-            wheelFlipped=false;
         }
 
-        error = targetS - currentS;
+        error = normalizeRadians(target - current);
 
         double power = Range.clip(rotationController.calculate(0, error), -MAX_SERVO, MAX_SERVO);
         if (Double.isNaN(power)) power = 0;
-        servo.setPower(power);
-        if(creste && (voltage-lastVoltage)<0) {
-            VoltageRotation+=3.3;
-        }
-        if(!creste && (voltage-lastVoltage)>0) {
-            VoltageRotation-=3.3;
-        }
-        if (Math.abs(VoltageRotation)==13.2) {
-            VoltageRotation=0;
-        }
-        lastVoltage=voltage;
-
-        //speedController.setPIDF(Pm, Im, Dm, 0);
-        //double targetM=, currentM=motor.getCurrentPosition();
-
+        servo.setPower(power + (Math.abs(error) > 0.02 ? K_STATIC : 0) * Math.signum(power));
     }
 
     public double getTargetRotation() {
-        return this.targetS;
+        return normalizeRadians(targetS - Math.PI);
     }
 
-    public double getModuleRotation(double Voltage) {
-        return (VoltageRotation+Voltage)/4.4*360;
+    public double getModuleRotation() {
+        return normalizeRadians(position - Math.PI);
     }
 
     public void setMotorPower(double power) {
@@ -136,11 +115,7 @@ public class SwerveModule {
     }
 
     public void setTargetRotation(double target) {
-        this.targetS = target;
-    }
-
-    public String getTelemetry(String name) {
-        return String.format(Locale.ENGLISH, "%s: Motor Flipped: %b \ncurrent position %.2f target position %.2f flip modifer = %d motor power = %.2f", name, wheelFlipped, getModuleRotation(lastVoltage), getTargetRotation(), flipModifier(), lastMotorPower);
+        this.targetS = normalizeRadians(target);
     }
 
     public int flipModifier() {
@@ -174,7 +149,12 @@ public class SwerveModule {
         return encoderTicksToInches(motor.getVelocity());
     }
 
-    public SwerveModuleState asState() {
+    public double encoderTicksToInches(double ticks) {
+        return WHEEL_RADIUS * 2 * Math.PI * GEAR_RATIO * ticks / TICKS_PER_REV;
+    }
+}
+
+    /*public SwerveModuleState asState() {
         return new SwerveModuleState(this);
     }
 
@@ -203,10 +183,7 @@ public class SwerveModule {
             double oldWheel = wheelPos;
             update();
             return Vector2d.polar(wheelPos - oldWheel, podRot);
-        }*/
-    }
-
-    public double encoderTicksToInches(double ticks) {
-        return WHEEL_RADIUS * 2 * Math.PI * GEAR_RATIO * ticks / TICKS_PER_REV;
+        }
     }
 }
+*/

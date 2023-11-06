@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.SWERVE.Subsystems;
 
 
+import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.telemetry;
 import static org.firstinspires.ftc.teamcode.SWERVE.HardwareSwerve.TRACKWIDTH;
 import static org.firstinspires.ftc.teamcode.SWERVE.HardwareSwerve.WHEEL_BASE;
 
@@ -46,8 +47,10 @@ public class DriveTrain implements DRIVETRAIN {
         double c = FWD-(RCW*(TRACKWIDTH/R));
         double d = FWD+(RCW*(TRACKWIDTH/R));
 
-        this.ws= new double []{Math.sqrt(b*b+c*c), Math.sqrt(b*b+d*d), Math.sqrt(a*a+d*d), Math.sqrt(a*a+c*c)};
-        this.wa= new double []{Math.atan2(b,c)*180/3.14, Math.atan2(b,d)*180/3.14, Math.atan2(a,d)*180/3.14, Math.atan2(a,c)*180/3.14};
+        ws= new double []{Math.sqrt(b*b+c*c), Math.sqrt(b*b+d*d), Math.sqrt(a*a+d*d), Math.sqrt(a*a+c*c)};
+        wa= new double []{Math.atan2(b,c)*180/3.14, Math.atan2(b,d)*180/3.14, Math.atan2(a,d)*180/3.14, Math.atan2(a,c)*180/3.14};
+        telemetry.addData("wa", wa);
+        telemetry.update();
 
         //facem ca puterea maxima sa nu fie mai mare de 1, fara sa stricam proportiile si o trimitem catre module
         double max = max(this.ws);
