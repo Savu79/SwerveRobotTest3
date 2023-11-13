@@ -44,10 +44,10 @@ public class Hardware {
         ServoSpateDr= hardwareMap.get(CRServo.class, "ServoSpateDr");
         ServoSpateSt= hardwareMap.get(CRServo.class, "ServoSpateSt"); ServoSpateSt.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        EncoderFataDr=hardwareMap.get(AnalogInput.class, "EncoderFataDr");
-        EncoderFataSt=hardwareMap.get(AnalogInput.class, "EncoderFataSt");
-        EncoderSpateDr=hardwareMap.get(AnalogInput.class, "EncoderSpateDr");
-        EncoderSpateSt=hardwareMap.get(AnalogInput.class, "EncoderSpateSt");
+        EncoderFataDr= hardwareMap.get(AnalogInput.class, "EncoderFataDr");
+        EncoderFataSt= hardwareMap.get(AnalogInput.class, "EncoderFataSt");
+        EncoderSpateDr= hardwareMap.get(AnalogInput.class, "EncoderSpateDr");
+        EncoderSpateSt= hardwareMap.get(AnalogInput.class, "EncoderSpateSt");
 
     }
 

@@ -14,7 +14,6 @@ import com.qualcomm.robotcore.util.Range;
 
 public class SwerveModule {
     private CRServo servo;
-    //Encoder enc;
     private AnalogInput encoder;
     private DcMotorEx motor;
     private PIDFController rotationController;
@@ -26,6 +25,7 @@ public class SwerveModule {
     public static double P = 0, I = 0, D = 0;
     public static double proportionalTerm;
     private double degPerV = 360 / 3.3;
+
     public SwerveModule(DcMotorEx m, CRServo s, AnalogInput e) {
         motor = m;
         MotorConfigurationType motorConfigurationType = motor.getMotorType().clone();
@@ -40,6 +40,7 @@ public class SwerveModule {
         //rotationController = new PIDFController(P, I, D, 0);
         motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     }
+
     public void update() {
         //desiredAngle = getTargetAngle();
         if (desiredAngle < 0) {
@@ -62,7 +63,7 @@ public class SwerveModule {
         return encoder.getVoltage() * degPerV;
     }
 
-    private double getTargetAngle(){
+    private double getTargetAngle() {
         return this.desiredAngle;
     }
 

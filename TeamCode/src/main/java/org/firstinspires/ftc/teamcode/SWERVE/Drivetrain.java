@@ -17,6 +17,7 @@ public class Drivetrain {
 
     double wa2;
     double ws2;
+
     public Drivetrain(Hardware robot) {
         frontLeftModule = new SwerveModule(robot.FataSt, robot.ServoFataSt, robot.EncoderFataSt);
         backLeftModule = new SwerveModule(robot.SpateSt, robot.ServoSpateSt, robot.EncoderSpateSt);
@@ -31,11 +32,11 @@ public class Drivetrain {
     public void set() {
         //ws = new double[]{hypot(b, c), hypot(b, d), hypot(a, d), hypot(a, c)};
         //wa = new double[]{atan2(b, c), atan2(b, d), atan2(a, d), atan2(a, c)};
-        wa2=Math.atan2(gamepad1.left_stick_y, gamepad1.left_stick_x) * (180 / Math.PI);
+        wa2 = Math.atan2(gamepad1.left_stick_y, gamepad1.left_stick_x) * (180 / Math.PI);
         if (wa2 < 0) {
             wa2 = 360 + wa2;
         }
-        ws2=Math.sqrt((0 - gamepad1.left_stick_y) * (0 - gamepad1.left_stick_y) + (0 - gamepad1.left_stick_x) * (0 - gamepad1.left_stick_x));
+        ws2 = Math.sqrt((0 - gamepad1.left_stick_y) * (0 - gamepad1.left_stick_y) + (0 - gamepad1.left_stick_x) * (0 - gamepad1.left_stick_x));
     }
 
     public void write() {
