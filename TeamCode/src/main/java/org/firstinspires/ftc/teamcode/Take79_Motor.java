@@ -44,6 +44,7 @@ public class Take79_Motor extends LinearOpMode {
         while (opModeIsActive()) {
             //desiredAngle = Math.toDegrees(Math.atan2(gamepad1.left_stick_y, gamepad1.left_stick_x));
             desiredAngle = Math.atan2(gamepad1.left_stick_y, gamepad1.left_stick_x) * (180 / Math.PI);
+
             if (desiredAngle < 0) {
                 desiredAngle = 360 + desiredAngle;
             }
