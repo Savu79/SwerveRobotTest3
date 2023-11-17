@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode.SWERVE;
 
-import com.acmerobotics.dashboard.config.Config;
-import com.acmerobotics.roadrunner.Pose2d;
 import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -9,10 +7,8 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.SWERVE.Subsystems.DriveTrain;
 
-@Config
-public class HardwareSwerve {
+public class Hardware {
     public DcMotorEx FataSt;
     public DcMotorEx FataDr;
     public DcMotorEx SpateDr;
@@ -25,15 +21,12 @@ public class HardwareSwerve {
     public AnalogInput EncoderFataSt;
     public AnalogInput EncoderSpateDr;
     public AnalogInput EncoderSpateSt;
-
-    private static HardwareSwerve instance = null;
+    private static Hardware instance = null;
     public boolean enabled;
-    public static double WHEEL_BASE=24;
-    public static double TRACKWIDTH=17;
 
-    public static HardwareSwerve getInstance() {
+    public static Hardware getInstance() {
         if (instance == null) {
-            instance = new HardwareSwerve();
+            instance = new Hardware();
         }
         instance.enabled = true;
         return instance;
@@ -51,47 +44,27 @@ public class HardwareSwerve {
         ServoSpateDr= hardwareMap.get(CRServo.class, "ServoSpateDr");
         ServoSpateSt= hardwareMap.get(CRServo.class, "ServoSpateSt"); ServoSpateSt.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        EncoderFataDr=hardwareMap.get(AnalogInput.class, "EncoderFataDr");
-        EncoderFataSt=hardwareMap.get(AnalogInput.class, "EncoderFataSt");
-        EncoderSpateDr=hardwareMap.get(AnalogInput.class, "EncoderSpateDr");
-        EncoderSpateSt=hardwareMap.get(AnalogInput.class, "EncoderSpateSt");
+        EncoderFataDr= hardwareMap.get(AnalogInput.class, "EncoderFataDr");
+        EncoderFataSt= hardwareMap.get(AnalogInput.class, "EncoderFataSt");
+        EncoderSpateDr= hardwareMap.get(AnalogInput.class, "EncoderSpateDr");
+        EncoderSpateSt= hardwareMap.get(AnalogInput.class, "EncoderSpateSt");
 
     }
 
-    public void loop(Pose2d Pose, DriveTrain drive){
+    public void loop(Drivetrain drivetrain) {
         try {
-            if (Pose != null) {
-                drive.calculeaza(Pose);
-            }
-            drive.updateAllModules();
-        } catch (Exception ignored) {}
+            drivetrain.set();
+            drivetrain.updateModules();
+        } catch (Exception ignored) {
+        }
+
+
     }
 
-    public void read(DriveTrain drive){
+    public void write(Drivetrain drivetrain) {
         try {
-            drive.read();
-        } catch (Exception ignored){}
-    }
-
-    public void write(DriveTrain drive){
-        try{
-            drive.write();
-        }catch(Exception ignored){}
-    }
-
-    public void reset(DriveTrain drive) {
-
-    }
-
-    public void testServo(DriveTrain drive, boolean poz) {
-        try {
-            if (poz) drive.testPozServo1();
-            else drive.testPozServo2();
-        } catch (Exception ignored){}
-    }
-    public void testMotors(DriveTrain drive, boolean on) {
-        try {
-            drive.testMotors(on);
-        } catch (Exception ignored){}
+            drivetrain.write();
+        } catch (Exception ignored) {
+        }
     }
 }
