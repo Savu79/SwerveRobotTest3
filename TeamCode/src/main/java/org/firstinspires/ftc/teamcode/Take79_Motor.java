@@ -55,7 +55,7 @@ public class Take79_Motor extends LinearOpMode {
 
             proportionalTerm = 0.007;
             servoPower = Range.clip(angleError * proportionalTerm, -1.0, 1.0);
-            if (angleError>180 || angleError<-180)
+            if (angleError>180 || (angleError<0 && angleError>-180))
             {
                 servoPower=-servoPower;
             }

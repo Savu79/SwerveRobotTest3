@@ -1,10 +1,12 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.arcrobotics.ftclib.controller.PIDController;
 import com.arcrobotics.ftclib.controller.PIDFController;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -13,6 +15,8 @@ import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
+@Config
+@TeleOp(name="Take79PIDMotor")
 public class Take79PIDMotor extends LinearOpMode {
 
     CRServo angleServo;
@@ -25,7 +29,7 @@ public class Take79PIDMotor extends LinearOpMode {
     double servoPower;
     public static double proportionalTerm;
     private PIDController rotationController;
-    private double P=0, I=0, D=0;
+    public static double P=0.1, I=0.0001, D=0.0001;
     private ElapsedTime runtime = new ElapsedTime();
 
     @Override
@@ -36,6 +40,7 @@ public class Take79PIDMotor extends LinearOpMode {
         analogEncoder = hardwareMap.get(AnalogInput.class, "analog");
         motor = hardwareMap.get(DcMotorEx.class, "motor");
         rotationController = new PIDController(P, I, D);
+//        rotationController.setIntegrationBounds();
 
         Telemetry telemetry = new MultipleTelemetry(this.telemetry, FtcDashboard.getInstance().getTelemetry());
 
@@ -52,7 +57,7 @@ public class Take79PIDMotor extends LinearOpMode {
             angleError = desiredAngle - currentAngle;
 
             servoPower = Range.clip(rotationController.calculate(0, angleError), -1.0, 1.0);
-            if (angleError>180 || angleError<-180)
+            if (angleError>180 || (angleError<0 && angleError>-180))
             {
                 servoPower=-servoPower;
             }
