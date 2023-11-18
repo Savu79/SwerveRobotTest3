@@ -3,11 +3,12 @@ package org.firstinspires.ftc.teamcode;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
+import com.arcrobotics.ftclib.controller.PIDController;
+import com.arcrobotics.ftclib.controller.PIDFController;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.CRServo;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
@@ -15,8 +16,8 @@ import com.qualcomm.robotcore.util.Range;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 @Config
-@TeleOp(name = "79_motor", group = "test")
-public class Take79_Motor extends LinearOpMode {
+@TeleOp(name = "Take79PIDMotor", group = "test")
+public class Take79OptReverse extends LinearOpMode {
 
     CRServo angleServo;
     //Encoder enc;
@@ -26,8 +27,11 @@ public class Take79_Motor extends LinearOpMode {
     double currentAngle;
     double angleError;
     double servoPower;
+    boolean flippus = false;
     public static double proportionalTerm;
-    private ElapsedTime runtime = new ElapsedTime();
+    private PIDController rotationController;
+    public static double P = 0.1, I = 0.0001, D = 0.0001;
+    private final ElapsedTime runtime = new ElapsedTime();
 
     @Override
     public void runOpMode() {
@@ -36,15 +40,16 @@ public class Take79_Motor extends LinearOpMode {
 
         analogEncoder = hardwareMap.get(AnalogInput.class, "analog");
         motor = hardwareMap.get(DcMotorEx.class, "motor");
+        rotationController = new PIDController(P, I, D);
+//        rotationController.setIntegrationBounds();
 
         Telemetry telemetry = new MultipleTelemetry(this.telemetry, FtcDashboard.getInstance().getTelemetry());
 
         waitForStart();
 
         while (opModeIsActive()) {
-            //desiredAngle = Math.toDegrees(Math.atan2(gamepad1.left_stick_y, gamepad1.left_stick_x));
-            desiredAngle = Math.atan2(gamepad1.left_stick_y, gamepad1.left_stick_x) * (180 / Math.PI);
-
+            rotationController.setPID(P, I, D);
+            desiredAngle = Math.toDegrees(Math.atan2(gamepad1.left_stick_y, gamepad1.left_stick_x));
             if (desiredAngle < 0) {
                 desiredAngle = 360 + desiredAngle;
             }
@@ -52,16 +57,25 @@ public class Take79_Motor extends LinearOpMode {
             currentAngle = getCurrentAngle();
 
             angleError = desiredAngle - currentAngle;
+            if (180 - Math.abs(angleError) > 90) {
+                flippus = true;
+                desiredAngle += 180;
+                angleError = desiredAngle - currentAngle;
+            } else {
+                flippus = false;
+            }
 
-            proportionalTerm = 0.007;
-            servoPower = Range.clip(angleError * proportionalTerm, -1.0, 1.0);
-            if (angleError>180 || (angleError<0 && angleError>-180))
-            {
-                servoPower=-servoPower;
+            servoPower = Range.clip(rotationController.calculate(0, angleError), -1.0, 1.0);
+            if (angleError > 180 || (angleError < 0 && angleError > -180)) {
+                servoPower = -servoPower;
             }
 
             angleServo.setPower(servoPower);
-            motor.setPower(Math.sqrt((0 - gamepad1.left_stick_y) * (0 - gamepad1.left_stick_y) + (0 - gamepad1.left_stick_x) * (0 - gamepad1.left_stick_x)));
+            if (flippus) {
+                motor.setPower(-Math.hypot(gamepad1.left_stick_x, gamepad1.left_stick_y));
+            } else {
+                motor.setPower(Math.hypot(gamepad1.left_stick_x, gamepad1.left_stick_y));
+            }
             telemetry.addData("Desired Angle", desiredAngle);
             telemetry.addData("Current Angle", currentAngle);
             telemetry.addData("Servo Power", servoPower);
@@ -72,14 +86,6 @@ public class Take79_Motor extends LinearOpMode {
     }
 
     private double getCurrentAngle() {
-        // Returneaza in grade;
-        // double encoderTicks = angleServo.getCurrentPosition();
-        //double enTi=enc.getCurrentPosition();
-        //double degPerTi=360/1;
-        double enV = analogEncoder.getVoltage();
-        double degPerV = 360 / 3.3;
-        // double degreesPerTick = 360.0 / encoderTicksPerRotation;
-        // return encoderTicks * degreesPerTick;
-        return enV * degPerV;
+        return analogEncoder.getVoltage() * 360 / 3.3;
     }
 }

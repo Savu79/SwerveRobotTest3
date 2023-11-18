@@ -13,7 +13,7 @@ import com.qualcomm.robotcore.util.Range;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 @Config
-@TeleOp(name = "79")
+@TeleOp(name = "79", group = "test")
 public class Take79 extends LinearOpMode {
 
     CRServo angleServo;

@@ -4,7 +4,6 @@ import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.arcrobotics.ftclib.controller.PIDController;
-import com.arcrobotics.ftclib.controller.PIDFController;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.AnalogInput;
@@ -16,8 +15,8 @@ import com.qualcomm.robotcore.util.Range;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 @Config
-@TeleOp(name="Take79PIDMotor")
-public class Take79PIDMotor extends LinearOpMode {
+@TeleOp(name = "Take79PID", group = "test")
+public class Take79PID extends LinearOpMode {
 
     CRServo angleServo;
     //Encoder enc;
@@ -29,7 +28,7 @@ public class Take79PIDMotor extends LinearOpMode {
     double servoPower;
     public static double proportionalTerm;
     private PIDController rotationController;
-    public static double P=0.1, I=0.0001, D=0.0001;
+    public static double P = 0.1, I = 0.0001, D = 0.0001;
     private ElapsedTime runtime = new ElapsedTime();
 
     @Override
@@ -47,7 +46,7 @@ public class Take79PIDMotor extends LinearOpMode {
         waitForStart();
 
         while (opModeIsActive()) {
-            rotationController.setPID(P, I , D);
+            rotationController.setPID(P, I, D);
             desiredAngle = Math.toDegrees(Math.atan2(gamepad1.left_stick_y, gamepad1.left_stick_x));
             if (desiredAngle < 0) {
                 desiredAngle = 360 + desiredAngle;
@@ -57,13 +56,12 @@ public class Take79PIDMotor extends LinearOpMode {
             angleError = desiredAngle - currentAngle;
 
             servoPower = Range.clip(rotationController.calculate(0, angleError), -1.0, 1.0);
-            if (angleError>180 || (angleError<0 && angleError>-180))
-            {
-                servoPower=-servoPower;
+            if (angleError > 180 || (angleError < 0 && angleError > -180)) {
+                servoPower = -servoPower;
             }
 
             angleServo.setPower(servoPower);
-            motor.setPower(Math.hypot(gamepad1.left_stick_x, gamepad1.left_stick_y));
+            //motor.setPower(Math.hypot(gamepad1.left_stick_x, gamepad1.left_stick_y));
             telemetry.addData("Desired Angle", desiredAngle);
             telemetry.addData("Current Angle", currentAngle);
             telemetry.addData("Servo Power", servoPower);
@@ -74,6 +72,6 @@ public class Take79PIDMotor extends LinearOpMode {
     }
 
     private double getCurrentAngle() {
-        return analogEncoder.getVoltage() * 360/3.3;
+        return analogEncoder.getVoltage() * 360 / 3.3;
     }
 }
