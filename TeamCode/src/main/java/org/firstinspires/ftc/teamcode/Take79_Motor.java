@@ -48,7 +48,7 @@ public class Take79_Motor extends LinearOpMode {
             if (desiredAngle < 0) {
                 desiredAngle = 360 + desiredAngle;
             }
-            //Math.atan2( y , x ) * ( 180 / Math.PI );
+
             currentAngle = getCurrentAngle();
 
             angleError = desiredAngle - currentAngle;

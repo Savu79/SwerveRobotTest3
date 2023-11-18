@@ -48,7 +48,7 @@ public class Take79PIDMotor extends LinearOpMode {
 
         while (opModeIsActive()) {
             rotationController.setPID(P, I , D);
-            desiredAngle = Math.atan2(gamepad1.left_stick_y, gamepad1.left_stick_x) * (180 / Math.PI);
+            desiredAngle = Math.toDegrees(Math.atan2(gamepad1.left_stick_y, gamepad1.left_stick_x));
             if (desiredAngle < 0) {
                 desiredAngle = 360 + desiredAngle;
             }
@@ -63,7 +63,7 @@ public class Take79PIDMotor extends LinearOpMode {
             }
 
             angleServo.setPower(servoPower);
-            motor.setPower(Math.sqrt((0 - gamepad1.left_stick_y) * (0 - gamepad1.left_stick_y) + (0 - gamepad1.left_stick_x) * (0 - gamepad1.left_stick_x)));
+            motor.setPower(Math.hypot(gamepad1.left_stick_x, gamepad1.left_stick_y));
             telemetry.addData("Desired Angle", desiredAngle);
             telemetry.addData("Current Angle", currentAngle);
             telemetry.addData("Servo Power", servoPower);
