@@ -7,8 +7,9 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.SWERVE.Subsystems.Drivetrain;
 
-public class Hardware {
+public class HardwareSwerve {
     public DcMotorEx FataSt;
     public DcMotorEx FataDr;
     public DcMotorEx SpateDr;
@@ -21,12 +22,13 @@ public class Hardware {
     public AnalogInput EncoderFataSt;
     public AnalogInput EncoderSpateDr;
     public AnalogInput EncoderSpateSt;
-    private static Hardware instance = null;
+    private static HardwareSwerve instance = null;
     public boolean enabled;
-
-    public static Hardware getInstance() {
+    public double WHEEL_BASE=0;
+    public double TRACKWIDTH=0;
+    public static HardwareSwerve getInstance() {
         if (instance == null) {
-            instance = new Hardware();
+            instance = new HardwareSwerve();
         }
         instance.enabled = true;
         return instance;
@@ -51,7 +53,7 @@ public class Hardware {
 
     }
 
-    public void loop(Drivetrain drivetrain) {
+    /*public void loop(Drivetrain drivetrain) {
         try {
             drivetrain.set();
             drivetrain.updateModules();
@@ -66,5 +68,5 @@ public class Hardware {
             drivetrain.write();
         } catch (Exception ignored) {
         }
-    }
+    }*/
 }

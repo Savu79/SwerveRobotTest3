@@ -2,19 +2,17 @@ package org.firstinspires.ftc.teamcode.OpM0des;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
-import com.acmerobotics.roadrunner.Pose2d;
 import com.arcrobotics.ftclib.command.CommandOpMode;
 import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.teamcode.SWERVE.Drivetrain;
-import org.firstinspires.ftc.teamcode.SWERVE.Hardware;
 
-import java.util.NavigableMap;
+import org.firstinspires.ftc.teamcode.SWERVE.HardwareSwerve;
+import org.firstinspires.ftc.teamcode.SWERVE.Subsystems.Drivetrain;
 
 @TeleOp(name = "Tele0p1")
 public class Tele0p1 extends CommandOpMode {
-    private Hardware robot = Hardware.getInstance();
+    private HardwareSwerve robot = HardwareSwerve.getInstance();
     private Drivetrain drive;
     double loopTime=0;
     //int servonr=0;
@@ -37,8 +35,8 @@ public class Tele0p1 extends CommandOpMode {
     public void run(){
 
         CommandScheduler.getInstance().run();
-        robot.write(drive);
-        robot.loop(drive);
+        //robot.write(drive);
+        //robot.loop(drive);
 
         double loop = System.nanoTime();
         telemetry.addData("hz ", 1000000000 / (loop - loopTime));
