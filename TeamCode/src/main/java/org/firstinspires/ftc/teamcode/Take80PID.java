@@ -135,6 +135,7 @@ public class Take80PID extends LinearOpMode {
         if (wheelFlipped) power *= -1;
         lastMotorPower = power;
         motor.setPower(power);
+        //
     }
 
     public void setTargetRotation(double target) {
