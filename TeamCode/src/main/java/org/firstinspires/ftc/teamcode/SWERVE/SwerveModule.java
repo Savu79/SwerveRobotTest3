@@ -1,6 +1,10 @@
 package org.firstinspires.ftc.teamcode.SWERVE;
 
+import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.telemetry;
 import static org.firstinspires.ftc.robotcore.external.navigation.AngleUnit.normalizeRadians;
+import static org.firstinspires.ftc.teamcode.Take80PID.K_STATIC;
+import static org.firstinspires.ftc.teamcode.Take80PID.MAX_SERVO;
+import static org.firstinspires.ftc.teamcode.Take80PID.MOTOR_FLIPPING;
 
 import com.arcrobotics.ftclib.controller.PIDFController;
 import com.qualcomm.robotcore.hardware.AnalogInput;
@@ -13,15 +17,16 @@ import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigu
 import com.qualcomm.robotcore.util.Range;
 
 public class SwerveModule {
-    private CRServo servo;
-    private AnalogInput encoder;
+    private CRServo angleServo;
+    private AnalogInput analoginput;
+    private AbsoluteAnalogEncoder analogEncoder;
     private DcMotorEx motor;
     private PIDFController rotationController;
     public boolean flippus = false;
-    double desiredAngle;
-    double currentAngle;
-    double angleError;
-    double servoPower;
+    double target;
+    double lastTarget;
+    boolean newTarget=false;
+    boolean wheelFlipped=false;
     public static double P = 0, I = 0, D = 0;
     public static double proportionalTerm;
     private double degPerV = 360 / 3.3;
@@ -33,42 +38,52 @@ public class SwerveModule {
         motor.setMotorType(motorConfigurationType);
         motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        servo = s;
-        ((CRServoImplEx) servo).setPwmRange(new PwmControl.PwmRange(500, 2500, 5000));
+        angleServo = s;
+        ((CRServoImplEx) angleServo).setPwmRange(new PwmControl.PwmRange(500, 2500, 5000));
 
-        encoder = e;
+        analoginput = e;
         //rotationController = new PIDFController(P, I, D, 0);
         motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     }
 
     public void update() {
-        //desiredAngle = getTargetAngle();
-        if (desiredAngle < 0) {
-            desiredAngle = 360 + desiredAngle;
+        rotationController.setPIDF(P, I, D, 0);
+        double current = analogEncoder.getCurrentPosition();
+        target=getTargetRotation();
+        if(target==lastTarget) newTarget=false;
+        else newTarget=true;
+
+        double error = normalizeRadians(target - current);
+        if (MOTOR_FLIPPING && (Math.abs(error) > Math.PI / 2)) {
+            target = normalizeRadians(target - Math.PI);
+            wheelFlipped = true;
+        } else if(newTarget){
+            wheelFlipped = false;
         }
-        currentAngle = getCurrentAngle();
+        lastTarget=target;
+        error = normalizeRadians(target - current);
 
-        angleError = desiredAngle - currentAngle;
-
-        proportionalTerm = 0.007;
-        servoPower = Range.clip(angleError * proportionalTerm, -1.0, 1.0);
-        if (angleError > 180 || angleError < -180) {
-            servoPower = -servoPower;
-        }
-
-        servo.setPower(servoPower);
+        double power = Range.clip(rotationController.calculate(0, error), -MAX_SERVO, MAX_SERVO);
+        if (Double.isNaN(power)) power = 0;
+        angleServo.setPower(power + (Math.abs(error) > 0.02 ? K_STATIC : 0) * Math.signum(power));
+        telemetry.addData("target: ", target);
+        telemetry.addData("current: ", current);
+        telemetry.addData("eroare: ", error);
+        telemetry.addData("wheelFlipped: ", wheelFlipped);
+        telemetry.addData("Power servo: ", power);
+        telemetry.update();
     }
 
     private double getCurrentAngle() {
-        return encoder.getVoltage() * degPerV;
+        return analogEncoder.getVoltage() * degPerV;
     }
 
-    private double getTargetAngle() {
-        return this.desiredAngle;
+    private double getTargetRotation() {
+        return target;
     }
 
     public void setTargetRotation(double target) {
-        this.desiredAngle = target;
+        this.target = target;
     }
 
     public void setMotorPower(double power) {

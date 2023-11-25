@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.SWERVE;
 
+import com.acmerobotics.roadrunner.Pose2d;
 import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -53,9 +54,9 @@ public class HardwareSwerve {
 
     }
 
-    /*public void loop(Drivetrain drivetrain) {
+    public void loop(Drivetrain drivetrain, double x, double y, double h) {
         try {
-            drivetrain.set();
+            drivetrain.calculeaza(x,y,h);
             drivetrain.updateModules();
         } catch (Exception ignored) {
         }
@@ -68,5 +69,5 @@ public class HardwareSwerve {
             drivetrain.write();
         } catch (Exception ignored) {
         }
-    }*/
+    }
 }
