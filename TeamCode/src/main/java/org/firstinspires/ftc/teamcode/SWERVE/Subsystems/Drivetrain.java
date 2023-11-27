@@ -33,7 +33,10 @@ public class Drivetrain{
         ModulSpateSt = new SwerveModule(robot.SpateSt, robot.ServoSpateSt, robot.EncoderSpateSt);
 
         modules = new SwerveModule[]{ModulFataDr, ModulFataSt, ModulSpateDr, ModulSpateSt};
-        for (SwerveModule m : modules) m.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        for(int i=0; i<4; i++){
+            SwerveModule m= modules[i];
+            m.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        }
     }
 
     public void calculeaza(double x, double y, double h){
@@ -68,7 +71,10 @@ public class Drivetrain{
         }
     }
     public void updateModules(){
-        for(SwerveModule m : modules) m.update();
+        for(int i=0; i<4; i++){
+            SwerveModule m= modules[i];
+            m.update();
+        };
     }
     public static double max(double... args){
         double max = args[0];
