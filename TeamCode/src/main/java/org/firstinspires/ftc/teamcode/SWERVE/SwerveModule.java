@@ -42,7 +42,7 @@ public class SwerveModule {
         ((CRServoImplEx) angleServo).setPwmRange(new PwmControl.PwmRange(500, 2500, 5000));
 
         analoginput = e;
-        //rotationController = new PIDFController(P, I, D, 0);
+        rotationController = new PIDFController(P, I, D, 0);
         motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     }
 
