@@ -27,7 +27,7 @@ public class SwerveModule {
     double lastTarget;
     boolean newTarget=false;
     boolean wheelFlipped=false;
-    public static double P = 0, I = 0, D = 0;
+    public static double P = 0.6, I = 0, D = 0.1;
     public static double proportionalTerm;
     private double degPerV = 360 / 3.3;
 
@@ -66,12 +66,6 @@ public class SwerveModule {
         double power = Range.clip(rotationController.calculate(0, error), -MAX_SERVO, MAX_SERVO);
         if (Double.isNaN(power)) power = 0;
         angleServo.setPower(power + (Math.abs(error) > 0.02 ? K_STATIC : 0) * Math.signum(power));
-        telemetry.addData("target: ", target);
-        telemetry.addData("current: ", current);
-        telemetry.addData("eroare: ", error);
-        telemetry.addData("wheelFlipped: ", wheelFlipped);
-        telemetry.addData("Power servo: ", power);
-        telemetry.update();
     }
 
     private double getCurrentAngle() {

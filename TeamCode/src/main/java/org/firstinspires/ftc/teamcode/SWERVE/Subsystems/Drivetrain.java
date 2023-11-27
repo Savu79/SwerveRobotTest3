@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode.SWERVE.Subsystems;
 
 
+import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.telemetry;
+
 import androidx.core.math.MathUtils;
 
 import com.acmerobotics.roadrunner.Pose2d;
@@ -11,7 +13,9 @@ import org.firstinspires.ftc.teamcode.SWERVE.SwerveModule;
 
 public class Drivetrain{
     private HardwareSwerve robot;
-    double R=Math.sqrt((robot.WHEEL_BASE*robot.WHEEL_BASE) + (robot.TRACKWIDTH*robot.TRACKWIDTH));
+    public static double TRACKWIDTH = 9, WHEEL_BASE = 9;
+
+    double R=Math.sqrt((WHEEL_BASE*WHEEL_BASE) + (TRACKWIDTH*TRACKWIDTH));
     public SwerveModule ModulFataDr, ModulFataSt, ModulSpateDr, ModulSpateSt;
     public SwerveModule[] modules;
     //public static double frontLeftOffset = -2.65, frontRightOffset = -3.66, backLeftOffset = -1.91, backRightOffset = -1.92;
@@ -36,19 +40,25 @@ public class Drivetrain{
         double STR=x; //Strafe
         double FWD=y; //Forward
         double RCW=h; //Rotate Clockwise
-        double a = STR-(RCW*(robot.WHEEL_BASE/R));
-        double b = STR+(RCW*(robot.WHEEL_BASE/R));
-        double c = FWD-(RCW*(robot.TRACKWIDTH/R));
-        double d = FWD+(RCW*(robot.TRACKWIDTH/R));
+        double a = STR-(RCW*(WHEEL_BASE/R));
+        double b = STR+(RCW*(WHEEL_BASE/R));
+        double c = FWD-(RCW*(TRACKWIDTH/R));
+        double d = FWD+(RCW*(TRACKWIDTH/R));
 
-        this.ws= new double []{Math.sqrt(b*b+c*c), Math.sqrt(b*b+d*d), Math.sqrt(a*a+d*d), Math.sqrt(a*a+c*c)};
-        this.wa= new double []{Math.atan2(b,c), Math.atan2(b,d), Math.atan2(a,d), Math.atan2(a,c)};
+        ws= new double []{Math.sqrt(b*b+c*c), Math.sqrt(b*b+d*d), Math.sqrt(a*a+d*d), Math.sqrt(a*a+c*c)};
+        wa= new double []{Math.atan2(b,c), Math.atan2(b,d), Math.atan2(a,d), Math.atan2(a,c)};
 
         //facem ca puterea maxima sa nu fie mai mare de 1, fara sa stricam proportiile si o trimitem catre module
-        double max = max(this.ws);
+        double max = max(ws);
         for(int i=0; i<4; i++)
-            if(max>1)
-                this.ws[i]=this.ws[i]/max;
+            if(max>1){
+                ws[i]=ws[i]/max;
+            }
+        telemetry.addData("WS0: ", ws[0]);
+        telemetry.addData("WS1: ", ws[1]);
+        telemetry.addData("WS2: ", ws[2]);
+        telemetry.addData("WS3: ", ws[3]);
+        telemetry.update();
     }
     public void write(){
         for(int i=0; i<4; i++){
