@@ -49,7 +49,6 @@ public class SwerveModule {
     public void update() {
         rotationController.setPIDF(P, I, D, 0);
         double current = analogEncoder.getCurrentPosition();
-        target=getTargetRotation();
         if(target==lastTarget) newTarget=false;
         else newTarget=true;
 

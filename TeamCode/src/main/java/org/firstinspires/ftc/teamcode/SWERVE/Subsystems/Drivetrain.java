@@ -69,11 +69,18 @@ public class Drivetrain{
             m.setMotorPower(Math.abs(ws[i]));
             m.setTargetRotation(wa[i]);
         }
+        telemetry.addData("WA0: Write", wa[0]);
+        telemetry.addData("WA1: Write", wa[1]);
+        telemetry.addData("WA2: Write", wa[2]);
+        telemetry.addData("WA3: Write", wa[3]);
+        telemetry.update();
     }
     public void updateModules(){
         for(int i=0; i<4; i++){
             SwerveModule m= modules[i];
             m.update();
+            telemetry.addData("Se da update bine", i);
+            telemetry.update();
         };
     }
     public static double max(double... args){
