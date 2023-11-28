@@ -43,9 +43,9 @@ public class HardwareSwerve {
         SpateSt= hardwareMap.get(DcMotorEx.class, "SpateSt"); SpateSt.setDirection(DcMotorSimple.Direction.REVERSE);
 
         ServoFataDr= hardwareMap.get(CRServo.class, "ServoFataDr");
-        ServoFataSt= hardwareMap.get(CRServo.class, "ServoFataSt"); ServoFataSt.setDirection(DcMotorSimple.Direction.REVERSE);
+        ServoFataSt= hardwareMap.get(CRServo.class, "ServoFataSt"); ServoFataSt.setDirection(CRServo.Direction.REVERSE);
         ServoSpateDr= hardwareMap.get(CRServo.class, "ServoSpateDr");
-        ServoSpateSt= hardwareMap.get(CRServo.class, "ServoSpateSt"); ServoSpateSt.setDirection(DcMotorSimple.Direction.REVERSE);
+        ServoSpateSt= hardwareMap.get(CRServo.class, "ServoSpateSt"); ServoSpateSt.setDirection(CRServo.Direction.REVERSE);
 
         EncoderFataDr= hardwareMap.get(AnalogInput.class, "EncoderFataDr");
         EncoderFataSt= hardwareMap.get(AnalogInput.class, "EncoderFataSt");

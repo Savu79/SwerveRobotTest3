@@ -6,6 +6,7 @@ import static org.firstinspires.ftc.teamcode.Take80PID.K_STATIC;
 import static org.firstinspires.ftc.teamcode.Take80PID.MAX_SERVO;
 import static org.firstinspires.ftc.teamcode.Take80PID.MOTOR_FLIPPING;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.arcrobotics.ftclib.controller.PIDFController;
 import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.CRServo;
@@ -16,6 +17,7 @@ import com.qualcomm.robotcore.hardware.PwmControl;
 import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigurationType;
 import com.qualcomm.robotcore.util.Range;
 
+@Config
 public class SwerveModule {
     private CRServo angleServo;
     private AnalogInput analoginput;

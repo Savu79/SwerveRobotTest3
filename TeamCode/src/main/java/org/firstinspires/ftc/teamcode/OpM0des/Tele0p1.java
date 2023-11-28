@@ -25,8 +25,8 @@ public class Tele0p1 extends CommandOpMode {
         CommandScheduler.getInstance().reset();
 
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
-        robot.enabled = true;
         robot.init(hardwareMap, telemetry);
+        robot.enabled = true;
 
         drive=new Drivetrain(robot);
     }
@@ -36,8 +36,8 @@ public class Tele0p1 extends CommandOpMode {
     public void run(){
 
         CommandScheduler.getInstance().run();
-        //robot.write(drive);
-        //robot.loop(drive);
+        robot.write(drive);
+        robot.loop(drive, gamepad1.left_stick_x, -gamepad1.left_stick_y,gamepad1.right_stick_x);
         double loop = System.nanoTime();
         telemetry.addData("hz ", 1000000000 / (loop - loopTime));
 //        telemetry.addData("X: ",);
