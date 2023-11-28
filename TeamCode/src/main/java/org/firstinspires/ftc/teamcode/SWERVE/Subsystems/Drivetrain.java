@@ -5,12 +5,13 @@ import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.tel
 
 import androidx.core.math.MathUtils;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.teamcode.SWERVE.HardwareSwerve;
 import org.firstinspires.ftc.teamcode.SWERVE.SwerveModule;
-
+@Config
 public class Drivetrain{
     private HardwareSwerve robot;
     public static double TRACKWIDTH = 9, WHEEL_BASE = 9;
