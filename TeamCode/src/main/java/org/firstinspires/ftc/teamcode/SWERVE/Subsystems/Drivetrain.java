@@ -76,6 +76,15 @@ public class Drivetrain{
         telemetry.addData("WA3: Write", wa[3]);
         telemetry.update();
     }
+
+    public void test()
+    {
+        for(int i=0; i<4; i++)
+        {
+            SwerveModule m = modules[i];
+            m.setPowerServo();
+        }
+    }
     public void updateModules(){
         for(int i=0; i<4; i++){
             SwerveModule m= modules[i];

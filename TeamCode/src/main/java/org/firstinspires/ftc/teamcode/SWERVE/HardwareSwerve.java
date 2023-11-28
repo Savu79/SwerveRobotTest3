@@ -70,4 +70,10 @@ public class HardwareSwerve {
         } catch (Exception ignored) {
         }
     }
+    public void test(Drivetrain drivetrain) {
+        try {
+            drivetrain.test();
+        } catch (Exception ignored) {
+        }
+    }
 }

@@ -82,6 +82,11 @@ public class SwerveModule {
         this.target = target;
     }
 
+    public void setPowerServo()
+    {
+        angleServo.setPower(1);
+    }
+
     public void setMotorPower(double power) {
         motor.setPower(power);
     }
