@@ -55,25 +55,13 @@ public class HardwareSwerve {
     }
 
     public void loop(Drivetrain drivetrain, double x, double y, double h) {
-        try {
-            drivetrain.calculeaza(x,y,h);
-            drivetrain.updateModules();
-        } catch (Exception ignored) {
-        }
-
-
+        drivetrain.calculeaza(x, y, h);
+        drivetrain.updateModules();
     }
-
     public void write(Drivetrain drivetrain) {
-        try {
             drivetrain.write();
-        } catch (Exception ignored) {
-        }
     }
     public void test(Drivetrain drivetrain) {
-        try {
             drivetrain.test();
-        } catch (Exception ignored) {
-        }
     }
 }

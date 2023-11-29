@@ -9,6 +9,7 @@ import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
+import org.firstinspires.ftc.teamcode.SWERVE.AbsoluteAnalogEncoder;
 import org.firstinspires.ftc.teamcode.SWERVE.HardwareSwerve;
 import org.firstinspires.ftc.teamcode.SWERVE.SwerveModule;
 @Config
@@ -28,10 +29,11 @@ public class Drivetrain{
 
     public Drivetrain(HardwareSwerve robot) {
         this.robot = robot;
-        ModulFataDr = new SwerveModule(robot.FataDr, robot.ServoFataDr, robot.EncoderFataDr);
-        ModulFataSt = new SwerveModule(robot.FataSt, robot.ServoFataSt, robot.EncoderFataSt);
-        ModulSpateDr = new SwerveModule(robot.SpateDr, robot.ServoSpateDr, robot.EncoderSpateDr);
-        ModulSpateSt = new SwerveModule(robot.SpateSt, robot.ServoSpateSt, robot.EncoderSpateSt);
+
+        ModulFataDr = new SwerveModule(robot.FataDr, robot.ServoFataDr, new AbsoluteAnalogEncoder(robot.EncoderFataDr,3.3).zero(frontRightOffset).setInverted(true));
+        ModulFataSt = new SwerveModule(robot.FataSt, robot.ServoFataSt, new AbsoluteAnalogEncoder(robot.EncoderFataSt,3.3).zero(frontLeftOffset).setInverted(true));
+        ModulSpateDr = new SwerveModule(robot.SpateDr, robot.ServoSpateDr, new AbsoluteAnalogEncoder(robot.EncoderSpateDr,3.3).zero(backRightOffset).setInverted(true));
+        ModulSpateSt = new SwerveModule(robot.SpateSt, robot.ServoSpateSt, new AbsoluteAnalogEncoder(robot.EncoderSpateSt,3.3).zero(backLeftOffset).setInverted(true));
 
         modules = new SwerveModule[]{ModulFataDr, ModulFataSt, ModulSpateDr, ModulSpateSt};
         for(int i=0; i<4; i++){
@@ -58,11 +60,6 @@ public class Drivetrain{
             if(max>1){
                 ws[i]=ws[i]/max;
             }
-        telemetry.addData("WS0: ", ws[0]);
-        telemetry.addData("WS1: ", ws[1]);
-        telemetry.addData("WS2: ", ws[2]);
-        telemetry.addData("WS3: ", ws[3]);
-        telemetry.update();
     }
     public void write(){
         for(int i=0; i<4; i++){
@@ -70,11 +67,6 @@ public class Drivetrain{
             m.setMotorPower(Math.abs(ws[i]));
             m.setTargetRotation(wa[i]);
         }
-        telemetry.addData("WA0: Write", wa[0]);
-        telemetry.addData("WA1: Write", wa[1]);
-        telemetry.addData("WA2: Write", wa[2]);
-        telemetry.addData("WA3: Write", wa[3]);
-        telemetry.update();
     }
 
     public void test()
@@ -89,8 +81,6 @@ public class Drivetrain{
         for(int i=0; i<4; i++){
             SwerveModule m= modules[i];
             m.update();
-            telemetry.addData("Se da update bine", i);
-            telemetry.update();
         };
     }
     public static double max(double... args){

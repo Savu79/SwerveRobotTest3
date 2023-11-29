@@ -37,7 +37,7 @@ public class Tele0p1 extends CommandOpMode {
 
         CommandScheduler.getInstance().run();
         robot.write(drive);
-        robot.loop(drive, gamepad1.left_stick_x, -gamepad1.left_stick_y,gamepad1.right_stick_x);
+        robot.loop(drive, gamepad1.left_stick_x, -gamepad1.left_stick_y,gamepad1.right_stick_x, 0,0,0);
         double loop = System.nanoTime();
         telemetry.addData("hz ", 1000000000 / (loop - loopTime));
 //        telemetry.addData("X: ",);

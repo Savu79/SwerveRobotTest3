@@ -20,7 +20,6 @@ import com.qualcomm.robotcore.util.Range;
 @Config
 public class SwerveModule {
     private CRServo angleServo;
-    private AnalogInput analoginput;
     private AbsoluteAnalogEncoder analogEncoder;
     private DcMotorEx motor;
     private PIDFController rotationController;
@@ -33,7 +32,7 @@ public class SwerveModule {
     public static double proportionalTerm;
     private double degPerV = 360 / 3.3;
 
-    public SwerveModule(DcMotorEx m, CRServo s, AnalogInput e) {
+    public SwerveModule(DcMotorEx m, CRServo s, AbsoluteAnalogEncoder e) {
         motor = m;
         MotorConfigurationType motorConfigurationType = motor.getMotorType().clone();
         motorConfigurationType.setAchieveableMaxRPMFraction(1);
@@ -43,31 +42,39 @@ public class SwerveModule {
         angleServo = s;
         ((CRServoImplEx) angleServo).setPwmRange(new PwmControl.PwmRange(500, 2500, 5000));
 
-        analoginput = e;
+        analogEncoder = e;
+
         rotationController = new PIDFController(P, I, D, 0);
+
         motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     }
 
     public void update() {
         rotationController.setPIDF(P, I, D, 0);
+
         double current = analogEncoder.getCurrentPosition();
         //target=getTargetRotation();
         if(target==lastTarget) newTarget=false;
         else newTarget=true;
 
         double error = normalizeRadians(target - current);
+
         if (MOTOR_FLIPPING && (Math.abs(error) > Math.PI / 2)) {
             target = normalizeRadians(target - Math.PI);
             wheelFlipped = true;
         } else if(newTarget){
             wheelFlipped = false;
         }
+
         lastTarget=target;
+
         error = normalizeRadians(target - current);
 
         double power = Range.clip(rotationController.calculate(0, error), -MAX_SERVO, MAX_SERVO);
         if (Double.isNaN(power)) power = 0;
-        angleServo.setPower(power + (Math.abs(error) > 0.02 ? K_STATIC : 0) * Math.signum(power));
+
+        //angleServo.setPower(power + (Math.abs(error) > 0.02 ? K_STATIC : 0) * Math.signum(power));
+        angleServo.setPower(power);
     }
 
     private double getCurrentAngle() {
