@@ -15,7 +15,7 @@ import org.firstinspires.ftc.teamcode.SWERVE.SwerveModule;
 @Config
 public class Drivetrain{
     private HardwareSwerve robot;
-    public static double TRACKWIDTH = 9, WHEEL_BASE = 9;
+    public static double TRACKWIDTH = 27, WHEEL_BASE = 27;
 
     double R=Math.sqrt((WHEEL_BASE*WHEEL_BASE) + (TRACKWIDTH*TRACKWIDTH));
     public SwerveModule ModulFataDr, ModulFataSt, ModulSpateDr, ModulSpateSt;
