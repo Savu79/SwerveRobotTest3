@@ -23,16 +23,21 @@ public class SwerveModule {
     private AbsoluteAnalogEncoder analogEncoder;
     private DcMotorEx motor;
     private PIDFController rotationController;
-    public boolean flippus = false;
+
     double target;
     double lastTarget;
     boolean newTarget=false;
     boolean wheelFlipped=false;
-    public static double P = 0.6, I = 0, D = 0.1;
-    public static double proportionalTerm;
+    public static double P1 = 0, I1 = 0, D1 = 0;
+    public static double P2 = 0, I2 = 0, D2 = 0;
+    public static double P3 = 0, I3 = 0, D3 = 0;
+    public static double P4 = 0, I4 = 0, D4 = 0;
+    double[] P= {P1,P2,P3,P4};
+    double[] I= {I1,I2,I3,I4};
+    double[] D= {D1,D2,D3,D4};
     private double degPerV = 360 / 3.3;
 
-    public SwerveModule(DcMotorEx m, CRServo s, AbsoluteAnalogEncoder e) {
+    public SwerveModule(DcMotorEx m, CRServo s, AbsoluteAnalogEncoder e, int i) {
         motor = m;
         MotorConfigurationType motorConfigurationType = motor.getMotorType().clone();
         motorConfigurationType.setAchieveableMaxRPMFraction(1);
@@ -40,20 +45,23 @@ public class SwerveModule {
         motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         angleServo = s;
-        ((CRServoImplEx) angleServo).setPwmRange(new PwmControl.PwmRange(500, 2500, 5000));
+        ((CRServoImplEx) angleServo).setPwmRange(new PwmControl.PwmRange(500, 2500, 5000));//1000-2000
 
         analogEncoder = e;
 
-        rotationController = new PIDFController(P, I, D, 0);
+        rotationController = new PIDFController(P[i], I[i], D[i], 0);
 
         motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     }
 
-    public void update() {
-        rotationController.setPIDF(P, I, D, 0);
+    public void update(int i) {
+        double[] P= {P1,P2,P3,P4};
+        double[] I= {I1,I2,I3,I4};
+        double[] D= {D1,D2,D3,D4};
+        rotationController.setPIDF(P[i], I[i], D[i], 0);
 
         double current = analogEncoder.getCurrentPosition();
-        //target=getTargetRotation();
+
         if(target==lastTarget) newTarget=false;
         else newTarget=true;
 
