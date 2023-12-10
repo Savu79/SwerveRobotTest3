@@ -21,7 +21,7 @@ public class Drivetrain{
     public SwerveModule ModulFataDr, ModulFataSt, ModulSpateDr, ModulSpateSt;
     public SwerveModule[] modules;
     //public static double frontLeftOffset = -2.65, frontRightOffset = -3.66, backLeftOffset = -1.91, backRightOffset = -1.92;
-    public static double frontLeftOffset = 0, frontRightOffset = 0, backLeftOffset = 0, backRightOffset = 0;
+    public static double frontLeftOffset = 0, frontRightOffset = 0, backLeftOffset = -1.8, backRightOffset = 0;
 
     double[] ws = new double[4];
     double[] wa = new double[4];
@@ -30,10 +30,10 @@ public class Drivetrain{
     public Drivetrain(HardwareSwerve robot) {
         this.robot = robot;
 
-        ModulFataDr = new SwerveModule(robot.FataDr, robot.ServoFataDr, new AbsoluteAnalogEncoder(robot.EncoderFataDr,3.3).zero(frontRightOffset).setInverted(true));
-        ModulFataSt = new SwerveModule(robot.FataSt, robot.ServoFataSt, new AbsoluteAnalogEncoder(robot.EncoderFataSt,3.3).zero(frontLeftOffset).setInverted(true));
-        ModulSpateDr = new SwerveModule(robot.SpateDr, robot.ServoSpateDr, new AbsoluteAnalogEncoder(robot.EncoderSpateDr,3.3).zero(backRightOffset).setInverted(true));
-        ModulSpateSt = new SwerveModule(robot.SpateSt, robot.ServoSpateSt, new AbsoluteAnalogEncoder(robot.EncoderSpateSt,3.3).zero(backLeftOffset).setInverted(true));
+        ModulFataDr = new SwerveModule(robot.FataDr, robot.ServoFataDr, new AbsoluteAnalogEncoder(robot.EncoderFataDr,3.3).zero(frontRightOffset).setInverted(true), 0);
+        ModulFataSt = new SwerveModule(robot.FataSt, robot.ServoFataSt, new AbsoluteAnalogEncoder(robot.EncoderFataSt,3.3).zero(frontLeftOffset).setInverted(true), 1);
+        ModulSpateDr = new SwerveModule(robot.SpateDr, robot.ServoSpateDr, new AbsoluteAnalogEncoder(robot.EncoderSpateDr,3.3).zero(backRightOffset).setInverted(true), 2);
+        ModulSpateSt = new SwerveModule(robot.SpateSt, robot.ServoSpateSt, new AbsoluteAnalogEncoder(robot.EncoderSpateSt,3.3).zero(backLeftOffset).setInverted(true), 3);
 
         modules = new SwerveModule[]{ModulFataDr, ModulFataSt, ModulSpateDr, ModulSpateSt};
         for(int i=0; i<4; i++){
@@ -80,7 +80,7 @@ public class Drivetrain{
     public void updateModules(){
         for(int i=0; i<4; i++){
             SwerveModule m= modules[i];
-            m.update();
+            m.update(i);
         };
     }
     public static double max(double... args){
